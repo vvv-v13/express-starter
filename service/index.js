@@ -59,6 +59,13 @@ for (let controller of controllers) {
     controller.wired && controller.wired(service);
 }
 
+// Handle 404 Error
+service.use(function(req, res, next){
+    res.status(404);
+    res.send({ error: "Not found" });
+    return;
+});
+
 var port = 8500;
 if (require.main == module) {
     unsecuredServer.listen(port);
