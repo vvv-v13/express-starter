@@ -3,15 +3,12 @@ import fs from "fs"
 import http from "http"
 
 import express from "express"
-
+import expressWinston from "express-winston"
 import compression from "compression"
 import log from "winston"
 
-//import load from "express-decorators/load"
 
 import load from "../library/load"
-
-
 
 export const controllers = [];
 export const component = module.exports || {};
@@ -26,11 +23,24 @@ export const service = express();
 
 service.use(compression());
 
+service.use(expressWinston.logger({
+    winstonInstance: log,
+    expressFormat: true,
+    colorize: true,
+}));
+
+const tsFormat = () => (new Date()).toLocaleString();
+
+log.remove(log.transports.Console).add(log.transports.Console, {
+    humanReadableUnhandledException: true,
+    handleExceptions: true,
+    colorize: true,
+    timestamp: tsFormat,
+});
+
 
 // this will load all controllers in the service/ directory via the
 // require-all library; those must be named as *Controller.js files;
-// please consult with require-all & express-decorators libraries for
-// more information on how to customize this behavior if needs to be
 load(service, {
     dirname: __dirname,
     resolve: function (exported) {
@@ -53,5 +63,6 @@ var port = 8500;
 if (require.main == module) {
     unsecuredServer.listen(port);
 }
+
 log.info(`Server started on ${port}`);
 
