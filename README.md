@@ -6,3 +6,9 @@ NodeJS &amp;  Express &amp; Knex &amp; Async Await &amp; Decorators
 ```bash
 npm run dev
 ```
+
+#### Run tests:
+
+```bash
+npm run test
+```
