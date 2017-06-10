@@ -15,6 +15,8 @@ export const component = module.exports || {};
 export const env = process.env.NODE_ENV || "develop";
 
 
+log.level = "debug";
+
 log.info(`booting a component on ${os.hostname()}`);
 log.info(`${component.name} @ ${component.version}`);
 log.info(`configured ${env} as NODE_ENV environment`);
