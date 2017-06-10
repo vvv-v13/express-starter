@@ -11,14 +11,13 @@ import log from "winston"
 import load from "../library/load"
 
 export const controllers = [];
-export const component = module.exports || {};
 export const env = process.env.NODE_ENV || "develop";
+export const port = process.env.PORT || 8500;
 
 
 log.level = "debug";
 
 log.info(`booting a component on ${os.hostname()}`);
-log.info(`${component.name} @ ${component.version}`);
 log.info(`configured ${env} as NODE_ENV environment`);
 
 export const service = express();
@@ -68,7 +67,6 @@ service.use(function(req, res, next){
     return;
 });
 
-var port = 8500;
 if (require.main == module) {
     unsecuredServer.listen(port);
 }
