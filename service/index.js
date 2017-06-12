@@ -2,11 +2,12 @@ import os from "os"
 import fs from "fs"
 import http from "http"
 
+import log from "winston"
+
 import express from "express"
 import expressWinston from "express-winston"
 import compression from "compression"
-import log from "winston"
-
+import requestIP from "request-ip"
 
 import load from "../library/load"
 
@@ -23,11 +24,11 @@ log.info(`configured ${env} as NODE_ENV environment`);
 export const service = express();
 
 service.use(compression());
+service.use(requestIP.mw());
 
 service.use(expressWinston.logger({
     winstonInstance: log,
-    expressFormat: true,
-    colorize: true,
+    msg: "[{{req.clientIp}}] {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}", 
 }));
 
 const tsFormat = () => (new Date()).toLocaleString();
@@ -37,6 +38,7 @@ log.remove(log.transports.Console).add(log.transports.Console, {
     handleExceptions: true,
     colorize: true,
     timestamp: tsFormat,
+
 });
 
 
@@ -63,8 +65,13 @@ for (let controller of controllers) {
 // Handle 404 Error
 service.use(function(req, res, next){
     res.status(404);
-    res.send({ error: "Not found" });
+    res.json({ error: "Not found" });
     return;
+});
+
+service.use(function(err, req, res) {  
+    res.status(500)
+    res.json({error: err});
 });
 
 if (require.main == module) {
