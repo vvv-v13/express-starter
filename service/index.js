@@ -8,6 +8,7 @@ import express from "express"
 import expressWinston from "express-winston"
 import compression from "compression"
 import requestIP from "request-ip"
+import knex from "knex"
 
 import load from "../library/load"
 
@@ -21,6 +22,7 @@ log.level = "debug";
 log.info(`booting a component on ${os.hostname()}`);
 log.info(`configured ${env} as NODE_ENV environment`);
 
+export let database = undefined;
 export const service = express();
 
 service.use(compression());
@@ -40,6 +42,15 @@ log.remove(log.transports.Console).add(log.transports.Console, {
     timestamp: tsFormat,
 
 });
+
+service.set("sql-db", database = knex({
+    client: 'sqlite3',
+    connection: {
+        filename: "db.sqlite3"
+    },
+    useNullAsDefault: true,
+}));
+
 
 
 // this will load all controllers in the service/ directory via the

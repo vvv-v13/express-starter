@@ -19,6 +19,15 @@ describe( `IndexController`, () => {
         });
     });
 
+    it("should respond to /cars", done => {
+        const endpoint = request(service).get("/cars");
+        endpoint.end((error, response) => {
+            assert(_.isObject(response.body));
+            assert.equal(200, response.statusCode);
+            return done();
+        });
+    });
+
     it("should recognize 404 requests", done => {
         const endpoint = request(service).post("/132");
         endpoint.end((error, response) => {
