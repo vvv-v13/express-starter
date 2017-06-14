@@ -16,7 +16,7 @@ export default class IndexController {
         const database = request.app.get("sql-db");
         const cars = database.table("cars");
 
-        let columns = ["id", "mark"];
+        let columns = ["id", "mark", "model"];
         let records = await cars
             .select(columns)
             .orderBy("mark");

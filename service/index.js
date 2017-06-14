@@ -55,6 +55,7 @@ service.set("sql-db", database = knex({
 }));
 
 export const migrate = database.migrate.latest();
+migrate.then(() => database.seed.run());
 
 
 // this will load all controllers in the service/ directory via the
