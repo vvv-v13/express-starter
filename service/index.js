@@ -40,7 +40,6 @@ log.remove(log.transports.Console).add(log.transports.Console, {
     handleExceptions: true,
     colorize: true,
     timestamp: tsFormat,
-
 });
 
 service.set("sql-db", database = knex({
@@ -48,9 +47,14 @@ service.set("sql-db", database = knex({
     connection: {
         filename: "db.sqlite3"
     },
+    migrations: {
+        tableName: "knex_migrations",
+        directory: "migrations"
+    },
     useNullAsDefault: true,
 }));
 
+export const migrate = database.migrate.latest();
 
 
 // this will load all controllers in the service/ directory via the
