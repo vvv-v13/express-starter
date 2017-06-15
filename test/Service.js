@@ -3,7 +3,7 @@ import log from "winston"
 import assert from "assert"
 import request from "supertest"
 
-import {service} from "../service"
+import { service, database } from "../service"
 
 log.level = "error";
 
@@ -15,5 +15,14 @@ describe( `Service`, () => {
             assert(_.isString(response.body.error));
             return done();
         });
+    });
+
+    it("should have SQL database up", async () => {
+        const columns = ["id", "name", "batch"]
+        const migrate = database.table("knex_migrations");
+        let row = await migrate.first(columns).orderBy("id");
+        assert.equal(1, row.batch, "incorrect batch number");
+        assert.equal(1, row.id, "missing first migration");
+        assert.equal("001-initialize.js", row.name || 0);
     });
 });
