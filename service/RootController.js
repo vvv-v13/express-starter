@@ -4,7 +4,7 @@ import { service, component } from "."
 
 
 @web.controller("/")
-export default class IndexController {
+export default class RootController {
 
     @web.get("/")
     async index(request, response) {

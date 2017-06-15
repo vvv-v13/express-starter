@@ -6,6 +6,8 @@ import crypto from "crypto";
 
 import _ from "lodash"
 
+import { jwtSecret, jwtExpire } from "../service"
+
 
 @web.controller("/api/auth")
 export default class AuthController {
@@ -14,8 +16,6 @@ export default class AuthController {
     async list(request, response) {
         const database = request.app.get("sql-db");
         const accounts = database.table("accounts");
-        const jwtSecret = "my_big_secret";
-        const jwtExpire = "12h";
 
         request.check("email").notEmpty();
         request.check("password").notEmpty();
@@ -67,5 +67,4 @@ export default class AuthController {
 
         response.send({ token });
     }
-
 }

@@ -19,6 +19,9 @@ export const controllers = [];
 export const env = process.env.NODE_ENV || "develop";
 export const port = process.env.PORT || 8500;
 
+export const jwtSecret = process.env.JWT_SECRET || "my_big_secret";
+export const jwtExpire = process.env.JWT_EXPIRE || "6h";
+
 
 log.level = "debug";
 
@@ -46,6 +49,7 @@ log.remove(log.transports.Console).add(log.transports.Console, {
     colorize: true,
     timestamp: tsFormat,
 });
+
 
 let databaseName = "db.sqlite3";
 
