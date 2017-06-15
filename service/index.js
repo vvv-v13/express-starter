@@ -7,6 +7,7 @@ import log from "winston"
 import express from "express"
 import bodyParser from "body-parser"
 import compression from "compression"
+import expressWebToken from "express-jwt"
 import expressValidator from "express-validator"
 import expressWinston from "express-winston"
 import requestIP from "request-ip"
@@ -31,11 +32,13 @@ log.info(`configured ${env} as NODE_ENV environment`);
 export let database = undefined;
 export const service = express();
 
+// Middlewares
 service.use(compression());
 service.use(requestIP.mw());
 service.use(bodyParser.json());
 service.use(expressValidator());
 
+// Logger
 service.use(expressWinston.logger({
     winstonInstance: log,
     msg: "[{{req.clientIp}}] {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}", 
@@ -50,7 +53,14 @@ log.remove(log.transports.Console).add(log.transports.Console, {
     timestamp: tsFormat,
 });
 
+// JWT
+service.use(expressWebToken({
+    requestProperty: "account",
+    credentialsRequired: false,
+    secret: jwtSecret,
+}));
 
+// Database
 let databaseName = "db.sqlite3";
 
 if (env === "test") {

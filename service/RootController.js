@@ -1,6 +1,6 @@
 import web from "express-decorators"
 
-import { service, component } from "."
+import { requireAccount } from "../library/access"
 
 
 @web.controller("/")
@@ -11,16 +11,9 @@ export default class RootController {
         response.send({message: "Say hello"});
     }
 
-    @web.get("/cars")
-    async list(request, response) {
-        const database = request.app.get("sql-db");
-        const cars = database.table("cars");
-
-        let columns = ["id", "mark", "model"];
-        let records = await cars
-            .select(columns)
-            .orderBy("mark");
-
-        response.send(records);
+    @web.get("/private")
+    @web.middleware(requireAccount)
+    async private(request, response) {
+        response.send({message: "Say secret hello"});
     }
 }
