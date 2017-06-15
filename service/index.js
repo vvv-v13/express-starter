@@ -5,9 +5,12 @@ import http from "http"
 import log from "winston"
 
 import express from "express"
-import expressWinston from "express-winston"
+import bodyParser from "body-parser"
 import compression from "compression"
+import expressValidator from "express-validator"
+import expressWinston from "express-winston"
 import requestIP from "request-ip"
+
 import knex from "knex"
 
 import load from "../library/load"
@@ -27,6 +30,8 @@ export const service = express();
 
 service.use(compression());
 service.use(requestIP.mw());
+service.use(bodyParser.json());
+service.use(expressValidator());
 
 service.use(expressWinston.logger({
     winstonInstance: log,
