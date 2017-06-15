@@ -48,7 +48,10 @@ log.remove(log.transports.Console).add(log.transports.Console, {
 });
 
 let databaseName = "db.sqlite3";
-if (env === "test") databaseName = "db_test.sqlite3";
+
+if (env === "test") {
+    databaseName = "db_test.sqlite3";
+}
 
 service.set("sql-db", database = knex({
     client: 'sqlite3',
@@ -58,6 +61,9 @@ service.set("sql-db", database = knex({
     migrations: {
         tableName: "knex_migrations",
         directory: "migrations"
+    },
+    seeds: { 
+        directory: "seeds" 
     },
     useNullAsDefault: true,
 }));
