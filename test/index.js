@@ -1,39 +1,17 @@
-import _ from "lodash"
 import log from "winston"
-import assert from "assert"
-import request from "supertest"
-
-import {service} from "../service"
+import {migrate, database} from "../service"
+import knexCleaner from "knex-cleaner"
 
 log.level = "error";
 
-describe( `IndexController`, () => {
 
-    it("should respond to /", done => {
-        const endpoint = request(service).get("/");
-        endpoint.end((error, response) => {
-            assert(_.isObject(response.body));
-            assert(_.isString(response.body.message));
-            assert.equal(200, response.statusCode);
-            return done();
-        });
-    });
+const options = {
+    mode: "delete", // Valid options "truncate", "delete"
+    ignoreTables: ["knex_migrations", "knex_migrations_lock"]
+}
 
-    it("should respond to /cars", done => {
-        const endpoint = request(service).get("/cars");
-        endpoint.end((error, response) => {
-            assert(_.isObject(response.body));
-            assert.equal(200, response.statusCode);
-            return done();
-        });
-    });
+before(async () => await knexCleaner.clean(database, options));
+before(async () => await migrate);
+before(async () => await database.seed.run());
 
-    it("should recognize 404 requests", done => {
-        const endpoint = request(service).post("/132");
-        endpoint.end((error, response) => {
-            assert.equal(404, response.statusCode);
-            assert(_.isString(response.body.error));
-            return done();
-        });
-    });
-});
+after(async () => await knexCleaner.clean(database, options));

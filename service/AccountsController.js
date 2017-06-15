@@ -57,7 +57,6 @@ export default class AccountsController {
         const passwordHash = key.toString('hex');
 
         password = `pbkdf2:${alg}:${interations}$${salt}$${passwordHash}`;
-        console.log(password, passwordHash);
 
         record = await accounts
             .returning(["id"])
@@ -68,7 +67,6 @@ export default class AccountsController {
                 password,
             });
 
-        console.log(record);
         response.send(record);
     }
 
