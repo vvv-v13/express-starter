@@ -61,7 +61,7 @@ export default class AuthController {
             id: account.id,
         }
 
-        const token = jwt.sign(account, jwtSecret, {
+        const token = jwt.sign(payload, jwtSecret, {
             expiresIn: jwtExpire
         });
 
