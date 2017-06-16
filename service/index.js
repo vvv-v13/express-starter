@@ -110,10 +110,15 @@ for (let controller of controllers) {
 service.use(function(req, res, next){
     res.status(404);
     res.json({ error: "Not found" });
-    return;
+    return
 });
 
-service.use(function(err, req, res) {  
+service.use(function(err, req, res, next) {  
+    if (err.name === "UnauthorizedError") {
+         res.status(err.status);
+         res.json({error: err.message});
+         return
+    }
     res.status(500)
     res.json({error: err});
 });
