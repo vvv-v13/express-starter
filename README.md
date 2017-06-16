@@ -13,5 +13,11 @@ npm run dev
 npm run test
 ```
 
+#### Deploy into Docker:
+
+```bash
+make deploy
+```
+
 #### Add new account
 curl -i -X POST -H "Content-Type: application/json" -d '{"email":"email@gmail.com", "password":123}' http://127.0.0.1:8500/api/accounts
